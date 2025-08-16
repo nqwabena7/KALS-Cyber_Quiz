@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Result</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .result-card {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      width: 400px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+    .score {
+      font-size: 22px;
+      font-weight: bold;
+      color: #4caf50;
+      margin: 20px 0;
+    }
+    .username {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #555;
+    }
+    button {
+      background: #f44336;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #d32f2f;
+    }
+  </style>
+</head>
+<body>
+  <div class="result-card">
+    <h1>Quiz Completed 🎉</h1>
+    <div class="username" id="username"></div>
+    <div class="score" id="score"></div>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    // Get values from localStorage
+    const username = localStorage.getItem("username") || "Student";
+    const score = localStorage.getItem("score") || "0";
+
+    // Show them
+    document.getElementById("username").textContent = "Name: " + username;
+    document.getElementById("score").textContent = "Your Score: " + score + " / 20";
+
+    // Logout button clears storage and redirects
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

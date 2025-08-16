@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('background.jpg') no-repeat center center fixed; /* 🔹 Background Image */
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5); /* dark overlay for readability */
+    }
+    .login-card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,0.9);
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      width: 350px;
+    }
+    .login-card img {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 15px;
+      border-radius: 50%;
+      border: 2px solid #4CAF50;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #388E3C;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div class="login-card">
+    <!-- 🔹 Small Logo/Profile Image -->
+    <img src="logo.png" alt="Student Logo">  
+    <h2>Student Login</h2>
+    <form onsubmit="login(event)">
+      <input type="text" id="username" placeholder="Enter your name" required>
+      <button type="submit">Start Quiz</button>
+    </form>
+  </div>
+
+  <script>
+    function login(e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value.trim();
+
+      if (username) {
+        localStorage.setItem("username", username); // ✅ Save username
+        window.location.href = "quiz.html"; // ✅ Go to quiz
+      }
+    }
+  </script>
+</body>
+</html>

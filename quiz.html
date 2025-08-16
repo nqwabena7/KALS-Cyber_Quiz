@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cyber Security Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 700px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .question {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .options label {
+      display: block;
+      margin: 6px 0;
+      padding: 8px;
+      border-radius: 6px;
+      background: #ecf0f1;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .options input {
+      margin-right: 8px;
+    }
+    .options label:hover {
+      background: #dfe6e9;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    button {
+      background: #3498db;
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    #timer {
+      text-align: right;
+      font-weight: bold;
+      color: #e74c3c;
+    }
+    .progress {
+      height: 12px;
+      background: #dcdde1;
+      border-radius: 8px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: #27ae60;
+      transition: width 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Cyber Security Quiz: Types of Security Threats</h2>
+    <div id="timer">Time Left: 40:00</div>
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <div id="quizContent"></div>
+    <div class="buttons">
+      <button onclick="prevQuestion()">Previous</button>
+      <button onclick="nextQuestion()">Next</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {q: "Q1. Which of the following is an example of an insider threat?", o:["Hacker from another country","Employee leaking company data","Phishing scam email","DoS attack"], a:1},
+      {q: "Q2. What type of attack is phishing?", o:["Malware attack","Social engineering attack","Insider attack","Physical attack"], a:1},
+      {q: "Q3. Malware that disguises itself as legitimate software is called:", o:["Worm","Trojan Horse","Spyware","Rootkit"], a:1},
+      {q: "Q4. Which attack involves guessing passwords repeatedly until success?", o:["DoS attack","Brute-force attack","Spoofing","SQL Injection"], a:1},
+      {q: "Q5. What does a Denial of Service (DoS) attack do?", o:["Encrypts files for ransom","Steals sensitive data","Floods system with requests to shut it down","Installs spyware"], a:2},
+      {q: "Q6. A USB infected with a virus is an example of:", o:["Insider threat","Physical threat","Malware threat","DoS attack"], a:2},
+      {q: "Q7. Which one is a physical security threat?", o:["Stolen laptop","SQL Injection","Phishing link","Man-in-the-Middle attack"], a:0},
+      {q: "Q8. An attacker secretly records network traffic between two parties. This is:", o:["DoS attack","Man-in-the-Middle (MitM)","Brute-force attack","Social engineering"], a:1},
+      {q: "Q9. Which type of malware self-replicates and spreads without user action?", o:["Trojan","Worm","Spyware","Adware"], a:1},
+      {q: "Q10. Which of the following is NOT a cyber threat?", o:["Ransomware","DoS attack","Strong password policy","Phishing"], a:2},
+      {q: "Q11. SQL Injection attacks target:", o:["Databases through insecure queries","Server hardware","Physical storage","Operating systems only"], a:0},
+      {q: "Q12. A disgruntled admin deletes important system files. This is:", o:["Insider threat","DoS attack","Malware infection","Social engineering"], a:0},
+      {q: "Q13. Spyware is designed to:", o:["Destroy files","Monitor user activities secretly","Encrypt files","Block access to the internet"], a:1},
+      {q: "Q14. A fake website designed to steal login credentials is an example of:", o:["Spoofing","Phishing","DoS attack","Brute-force"], a:1},
+      {q: "Q15. Advanced Persistent Threats (APTs) are characterized by:", o:["Short attacks with no persistence","Continuous, targeted, and stealthy operations","Attacks only on physical hardware","Simple brute-force attempts"], a:1},
+      {q: "Q16. An attacker uses ransomware to encrypt files and demands Bitcoin. This is:", o:["Spyware attack","Ransomware attack","Insider threat","Man-in-the-Middle"], a:1},
+      {q: "Q17. DNS Spoofing primarily aims to:", o:["Crash the DNS server","Redirect traffic to malicious websites","Encrypt DNS queries","Protect users from phishing"], a:1},
+      {q: "Q18. Zero-day attacks are dangerous because:", o:["They exploit vulnerabilities before they are patched","They require insider help","They only affect old systems","They happen only once"], a:0},
+      {q: "Q19. Social engineering attacks are dangerous mainly because:", o:["They require advanced coding","They exploit human psychology","They can’t be detected by firewalls","They only affect networks"], a:1},
+      {q: "Q20. A company server is hacked and false information is inserted into official emails. This is an example of:", o:["Spoofing","Ransomware","DoS attack","Worm infection"], a:0}
+    ];
+
+    let currentQuestion = 0;
+    let answers = new Array(questions.length).fill(null);
+    const quizContent = document.getElementById("quizContent");
+    const progressBar = document.getElementById("progressBar");
+
+    function loadQuestion(index) {
+      const q = questions[index];
+      quizContent.innerHTML = `
+        <div class="question">${q.q}</div>
+        <div class="options">
+          ${q.o.map((opt,i)=>`
+            <label>
+              <input type="radio" name="q${index}" value="${i}" ${answers[index]===i?'checked':''}>
+              ${opt}
+            </label>
+          `).join("")}
+        </div>
+      `;
+      updateProgress();
+    }
+
+    function updateProgress() {
+      progressBar.style.width = ((currentQuestion+1)/questions.length)*100 + "%";
+    }
+
+    function nextQuestion() {
+      saveAnswer();
+      if (currentQuestion < questions.length-1) {
+        currentQuestion++;
+        loadQuestion(currentQuestion);
+      } else {
+        submitQuiz();
+      }
+    }
+
+    function prevQuestion() {
+      saveAnswer();
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        loadQuestion(currentQuestion);
+      }
+    }
+
+    function saveAnswer() {
+      const selected = document.querySelector(`input[name="q${currentQuestion}"]:checked`);
+      if (selected) answers[currentQuestion] = parseInt(selected.value);
+    }
+
+    function submitQuiz() {
+      saveAnswer();
+      let score = 0;
+      answers.forEach((ans, i) => {
+        if (ans === questions[i].a) score++;
+      });
+      localStorage.setItem("score", score);
+      window.location.href = "result.html";
+    }
+
+    // Countdown timer (25 minutes)
+    let timeLeft = 25 * 60;
+    const timerDisplay = document.getElementById("timer");
+    const timer = setInterval(()=>{
+      let mins = Math.floor(timeLeft/60);
+      let secs = timeLeft%60;
+      timerDisplay.textContent = `Time Left: ${mins}:${secs<10?"0":""}${secs}`;
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        submitQuiz();
+      }
+      timeLeft--;
+    },1000);
+
+    loadQuestion(currentQuestion);
+  </script>
+</body>
+</html>
